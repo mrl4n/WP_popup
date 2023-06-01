@@ -32,6 +32,14 @@ function custom_popup_markup() {
         <div class="custom-popup-content">
             <h3>Welcome to our website!</h3>
             <p>Enjoy your stay and check out our amazing offers.</p>
+            
+            <!-- Form -->
+            <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
+                <input type="hidden" name="action" value="custom_popup_submit">
+                <input type="text" name="custom_popup_input" placeholder="Enter your input">
+                <button type="submit">Submit</button>
+            </form>
+            
             <button id="custom-popup-close">Close</button>
         </div>
     </div>
@@ -55,6 +63,7 @@ function custom_popup_initialize() {
     </script>
     <?php
 }
+
 // Sanitize and validate user input
 function custom_popup_sanitize_input($input) {
     // Sanitize text fields
@@ -70,9 +79,9 @@ function custom_popup_sanitize_input($input) {
 // Process user input
 function custom_popup_process_input() {
     // Check if the form is submitted
-    if (isset($_POST['custom_popup_input'])) {
+    if (isset($_POST['action']) && $_POST['action'] === 'custom_popup_submit') {
         // Get the user input
-        $user_input = $_POST['custom_popup_input'];
+        $user_input = isset($_POST['custom_popup_input']) ? $_POST['custom_popup_input'] : '';
         
         // Sanitize and validate the user input
         $sanitized_input = custom_popup_sanitize_input($user_input);
@@ -82,6 +91,6 @@ function custom_popup_process_input() {
     }
 }
 
-// Add action hook for processing input
+// Add action hooks for processing input and initializing pop-up
 add_action('init', 'custom_popup_process_input');
 add_action('wp_footer', 'custom_popup_initialize');
