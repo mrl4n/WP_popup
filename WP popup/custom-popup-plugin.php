@@ -55,4 +55,33 @@ function custom_popup_initialize() {
     </script>
     <?php
 }
+// Sanitize and validate user input
+function custom_popup_sanitize_input($input) {
+    // Sanitize text fields
+    $sanitized_input = sanitize_text_field($input);
+    
+    // Validate and sanitize numeric fields
+    $numeric_input = intval($input);
+    
+    // Return the sanitized and validated input
+    return $sanitized_input;
+}
+
+// Process user input
+function custom_popup_process_input() {
+    // Check if the form is submitted
+    if (isset($_POST['custom_popup_input'])) {
+        // Get the user input
+        $user_input = $_POST['custom_popup_input'];
+        
+        // Sanitize and validate the user input
+        $sanitized_input = custom_popup_sanitize_input($user_input);
+        
+        // Do further processing with the sanitized input
+        // ...
+    }
+}
+
+// Add action hook for processing input
+add_action('init', 'custom_popup_process_input');
 add_action('wp_footer', 'custom_popup_initialize');
