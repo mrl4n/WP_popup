@@ -27,6 +27,8 @@ add_action('wp_enqueue_scripts', 'custom_popup_scripts');
 
 // Add pop-up HTML markup to the footer
 function custom_popup_markup() {
+    // Generate a nonce
+    $nonce = wp_create_nonce('custom_popup_nonce');
     ?>
     <div id="custom-popup" class="custom-popup">
         <div class="custom-popup-content">
@@ -36,6 +38,7 @@ function custom_popup_markup() {
             <!-- Form -->
             <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
                 <input type="hidden" name="action" value="custom_popup_submit">
+                <input type="hidden" name="custom_popup_nonce" value="<?php echo esc_attr($nonce); ?>">
                 <input type="text" name="custom_popup_input" placeholder="Enter your input">
                 <button type="submit">Submit</button>
             </form>
@@ -80,17 +83,15 @@ function custom_popup_sanitize_input($input) {
 function custom_popup_process_input() {
     // Check if the form is submitted
     if (isset($_POST['action']) && $_POST['action'] === 'custom_popup_submit') {
-        // Get the user input
-        $user_input = isset($_POST['custom_popup_input']) ? $_POST['custom_popup_input'] : '';
-        
-        // Sanitize and validate the user input
-        $sanitized_input = custom_popup_sanitize_input($user_input);
-        
-        // Do further processing with the sanitized input
-        // ...
-    }
-}
-
-// Add action hooks for processing input and initializing pop-up
-add_action('init', 'custom_popup_process_input');
-add_action('wp_footer', 'custom_popup_initialize');
+        // Verify the nonce
+        if (isset($_POST['custom_popup_nonce']) && wp_verify_nonce($_POST['custom_popup_nonce'], 'custom_popup_nonce')) {
+            // Get the user input
+            $user_input = isset($_POST['custom_popup_input']) ? $_POST['custom_popup_input'] : '';
+            
+            // Sanitize and validate the user input
+            $sanitized_input = custom_popup_sanitize_input($user_input);
+            
+            // Do further processing with the sanitized input
+            // ...
+        } else {
+            // Invalid
