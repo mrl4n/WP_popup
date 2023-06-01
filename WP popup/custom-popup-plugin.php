@@ -1,14 +1,14 @@
 <?php
-/*
-Plugin Name: Custom Pop-up Plugin
-Plugin URI: https://github.com/mrl4n
-Description: This plugin adds a custom pop-up to your WordPress site.
-Version: 1.0
-Author: mrl4n
-Author URI: https://github.com/mrl4n
-License: GPLv2 or later
-Text Domain: custom-popup-plugin
-*/
+/**
+ * Plugin Name: Custom Pop-up Plugin
+ * Plugin URI: https://github.com/mrl4n
+ * Description: This plugin adds a custom pop-up to your WordPress site.
+ * Version: 1.0
+ * Author: Your Name
+ * Author URI: https://github.com/mrl4n
+ * License: GPLv2 or later
+ * Text Domain: custom-popup-plugin
+ */
 
 // Enqueue necessary scripts and styles
 function custom_popup_scripts() {
@@ -16,10 +16,10 @@ function custom_popup_scripts() {
     if (!wp_script_is('jquery', 'enqueued')) {
         wp_enqueue_script('jquery');
     }
-    
+
     // Enqueue plugin script
     wp_enqueue_script('custom-popup-script', plugins_url('js/custom-popup.js', __FILE__), array('jquery'), '1.0', true);
-    
+
     // Enqueue plugin styles
     wp_enqueue_style('custom-popup-style', plugins_url('css/custom-popup.css', __FILE__));
 }
@@ -32,9 +32,10 @@ function custom_popup_markup() {
     ?>
     <div id="custom-popup" class="custom-popup">
         <div class="custom-popup-content">
+            <img src="<?php echo plugins_url('images/logo.png', __FILE__); ?>" alt="Logo">
             <h3>Welcome to our website!</h3>
             <p>Enjoy your stay and check out our amazing offers.</p>
-            
+
             <!-- Form -->
             <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
                 <input type="hidden" name="action" value="custom_popup_submit">
@@ -42,7 +43,7 @@ function custom_popup_markup() {
                 <input type="text" name="custom_popup_input" placeholder="Enter your input">
                 <button type="submit">Submit</button>
             </form>
-            
+
             <button id="custom-popup-close">Close</button>
         </div>
     </div>
@@ -57,7 +58,7 @@ function custom_popup_initialize() {
         jQuery(document).ready(function($) {
             // Show the pop-up
             $('#custom-popup').fadeIn();
-            
+
             // Close the pop-up when the close button is clicked
             $('#custom-popup-close').on('click', function() {
                 $('#custom-popup').fadeOut();
@@ -71,10 +72,10 @@ function custom_popup_initialize() {
 function custom_popup_sanitize_input($input) {
     // Sanitize text fields
     $sanitized_input = sanitize_text_field($input);
-    
+
     // Validate and sanitize numeric fields
     $numeric_input = intval($input);
-    
+
     // Return the sanitized and validated input
     return $sanitized_input;
 }
@@ -87,11 +88,6 @@ function custom_popup_process_input() {
         if (isset($_POST['custom_popup_nonce']) && wp_verify_nonce($_POST['custom_popup_nonce'], 'custom_popup_nonce')) {
             // Get the user input
             $user_input = isset($_POST['custom_popup_input']) ? $_POST['custom_popup_input'] : '';
-            
+
             // Sanitize and validate the user input
-            $sanitized_input = custom_popup_sanitize_input($user_input);
-            
-            // Do further processing with the sanitized input
-            // ...
-        } else {
-            // Invalid
+            $san
