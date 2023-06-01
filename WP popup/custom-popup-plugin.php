@@ -4,7 +4,7 @@ Plugin Name: Custom Pop-up Plugin
 Plugin URI: https://github.com/mrl4n
 Description: This plugin adds a custom pop-up to your WordPress site.
 Version: 1.0
-Author: Your Name
+Author: mrl4n
 Author URI: https://github.com/mrl4n
 License: GPLv2 or later
 Text Domain: custom-popup-plugin
