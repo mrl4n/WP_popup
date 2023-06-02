@@ -4,7 +4,7 @@
  * Plugin URI: https://github.com/mrl4n
  * Description: This plugin adds a custom pop-up to your WordPress site.
  * Version: 1.0
- * Author: Your Name
+ * Author: mrl4n
  * Author URI: https://github.com/mrl4n
  * License: GPLv2 or later
  * Text Domain: custom-popup-plugin
@@ -67,27 +67,31 @@ function custom_popup_initialize() {
     </script>
     <?php
 }
+add_action('wp_footer', 'custom_popup_initialize');
 
-// Sanitize and validate user input
-function custom_popup_sanitize_input($input) {
-    // Sanitize text fields
-    $sanitized_input = sanitize_text_field($input);
+// Add settings menu in the WordPress backend
+function custom_popup_settings_menu() {
+    add_options_page(
+        'Custom Pop-up Settings',
+        'Custom Pop-up',
+        'manage_options',
+        'custom-popup-settings',
+        'custom_popup_settings_page'
+    );
+}
+add_action('admin_menu', 'custom_popup_settings_menu');
 
-    // Validate and sanitize numeric fields
-    $numeric_input = intval($input);
+// Create the settings page
+function custom_popup_settings_page() {
+    if (!current_user_can('manage_options')) {
+        return;
+    }
+ }
 
-    // Return the sanitized and validated input
-    return $sanitized_input;
+    // Save settings
+    if (isset($_POST['custom_popup_settings_save'])) {
+        update_option('custom_popup_enabled', isset($_POST['custom_popup_enabled']) ? true : false);
+        update_option('custom_popup_message', sanitize_text_field($_POST['custom_popup_message']));
+        update_option('custom_popup_button_text', sanitize_text_field($_POST['custom_popup_button_text']));
 }
 
-// Process user input
-function custom_popup_process_input() {
-    // Check if the form is submitted
-    if (isset($_POST['action']) && $_POST['action'] === 'custom_popup_submit') {
-        // Verify the nonce
-        if (isset($_POST['custom_popup_nonce']) && wp_verify_nonce($_POST['custom_popup_nonce'], 'custom_popup_nonce')) {
-            // Get the user input
-            $user_input = isset($_POST['custom_popup_input']) ? $_POST['custom_popup_input'] : '';
-
-            // Sanitize and validate the user input
-            $san
