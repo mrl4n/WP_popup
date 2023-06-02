@@ -8,7 +8,14 @@
  * Author URI: https://github.com/mrl4n
  * License: GPLv2 or later
  * Text Domain: custom-popup-plugin
+ * Domain Path: /languages/
  */
+
+// Load plugin text domain for translations
+function custom_popup_load_textdomain() {
+    load_plugin_textdomain('custom-popup-plugin', false, dirname(plugin_basename(__FILE__)) . '/languages/');
+}
+add_action('plugins_loaded', 'custom_popup_load_textdomain');
 
 // Enqueue necessary scripts and styles
 function custom_popup_scripts() {
@@ -33,18 +40,18 @@ function custom_popup_markup() {
     <div id="custom-popup" class="custom-popup">
         <div class="custom-popup-content">
             <img src="<?php echo esc_url(plugins_url('images/logo.png', __FILE__)); ?>" alt="Logo">
-            <h3>Welcome to our website!</h3>
-            <p>Enjoy your stay and check out our amazing offers.</p>
+            <h3><?php _e('Welcome to our website!', 'custom-popup-plugin'); ?></h3>
+            <p><?php _e('Enjoy your stay and check out our amazing offers.', 'custom-popup-plugin'); ?></p>
 
             <!-- Form -->
             <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
                 <input type="hidden" name="action" value="custom_popup_submit">
                 <input type="hidden" name="custom_popup_nonce" value="<?php echo esc_attr($nonce); ?>">
-                <input type="text" name="custom_popup_input" placeholder="Enter your input">
-                <button type="submit">Submit</button>
+                <input type="text" name="custom_popup_input" placeholder="<?php _e('Enter your input', 'custom-popup-plugin'); ?>">
+                <button type="submit"><?php _e('Submit', 'custom-popup-plugin'); ?></button>
             </form>
 
-            <button id="custom-popup-close">Close</button>
+            <button id="custom-popup-close"><?php _e('Close', 'custom-popup-plugin'); ?></button>
         </div>
     </div>
     <?php
@@ -72,8 +79,8 @@ add_action('wp_footer', 'custom_popup_initialize');
 // Add settings menu in the WordPress backend
 function custom_popup_settings_menu() {
     add_options_page(
-        'Custom Pop-up Settings',
-        'Custom Pop-up',
+        __('Custom Pop-up Settings', 'custom-popup-plugin'),
+        __('Custom Pop-up', 'custom-popup-plugin'),
         'manage_options',
         'custom-popup-settings',
         'custom_popup_settings_page'
@@ -89,25 +96,17 @@ function custom_popup_settings_page() {
 
     // Save settings
     if (isset($_POST['custom_popup_settings_save'])) {
-        $enabled = isset($_POST['custom_popup_enabled']) ? 1 : 0;
+        $enabled = isset($_POST['custom_popup_enabled']) ? true : false;
         $message = sanitize_text_field($_POST['custom_popup_message']);
         $button_text = sanitize_text_field($_POST['custom_popup_button_text']);
 
-        // Validate and sanitize data
-        if ($enabled) {
-            // Save settings to the database
-            update_option('custom_popup_enabled', $enabled);
-            update_option('custom_popup_message', $message);
-            update_option('custom_popup_button_text', $button_text);
-        } else {
-            // Delete settings from the database
-            delete_option('custom_popup_enabled');
-            delete_option('custom_popup_message');
-            delete_option('custom_popup_button_text');
-        }
+        // Save settings to the database
+        update_option('custom_popup_enabled', $enabled);
+        update_option('custom_popup_message', $message);
+        update_option('custom_popup_button_text', $button_text);
 
         // Display a success message
-        echo '<div class="notice notice-success"><p>Settings saved successfully.</p></div>';
+        echo '<div class="notice notice-success"><p>' . __('Settings saved successfully.', 'custom-popup-plugin') . '</p></div>';
     }
 
     // Get current settings values
@@ -118,33 +117,33 @@ function custom_popup_settings_page() {
     // Render the settings page HTML
     ?>
     <div class="wrap">
-        <h1>Custom Pop-up Settings</h1>
+        <h1><?php _e('Custom Pop-up Settings', 'custom-popup-plugin'); ?></h1>
         <form method="post" action="">
             <table class="form-table">
                 <tr>
-                    <th scope="row">Enable Pop-up</th>
+                    <th scope="row"><?php _e('Enable Pop-up', 'custom-popup-plugin'); ?></th>
                     <td>
                         <label for="custom_popup_enabled">
                             <input type="checkbox" name="custom_popup_enabled" id="custom_popup_enabled" value="1" <?php checked($enabled, 1); ?>>
-                            Enable custom pop-up
+                            <?php _e('Enable custom pop-up', 'custom-popup-plugin'); ?>
                         </label>
                     </td>
                 </tr>
                 <tr>
-                    <th scope="row">Pop-up Message</th>
+                    <th scope="row"><?php _e('Pop-up Message', 'custom-popup-plugin'); ?></th>
                     <td>
                         <textarea name="custom_popup_message" id="custom_popup_message" rows="3"><?php echo esc_textarea($message); ?></textarea>
                     </td>
                 </tr>
                 <tr>
-                    <th scope="row">Button Text</th>
+                    <th scope="row"><?php _e('Button Text', 'custom-popup-plugin'); ?></th>
                     <td>
                         <input type="text" name="custom_popup_button_text" id="custom_popup_button_text" value="<?php echo esc_attr($button_text); ?>">
                     </td>
                 </tr>
             </table>
             <p class="submit">
-                <input type="submit" name="custom_popup_settings_save" class="button-primary" value="Save Settings">
+                <input type="submit" name="custom_popup_settings_save" class="button-primary" value="<?php _e('Save Settings', 'custom-popup-plugin'); ?>">
             </p>
         </form>
     </div>
