@@ -32,7 +32,7 @@ function custom_popup_markup() {
     ?>
     <div id="custom-popup" class="custom-popup">
         <div class="custom-popup-content">
-            <img src="<?php echo plugins_url('images/logo.png', __FILE__); ?>" alt="Logo">
+            <img src="<?php echo esc_url(plugins_url('images/logo.png', __FILE__)); ?>" alt="Logo">
             <h3>Welcome to our website!</h3>
             <p>Enjoy your stay and check out our amazing offers.</p>
 
@@ -89,55 +89,64 @@ function custom_popup_settings_page() {
 
     // Save settings
     if (isset($_POST['custom_popup_settings_save'])) {
-        update_option('custom_popup_enabled', isset($_POST['custom_popup_enabled']) ? true : false);
-        update_option('custom_popup_message', sanitize_text_field($_POST['custom_popup_message']));
-        update_option('custom_popup_button_text', sanitize_text_field($_POST['custom_popup_button_text']));
+        $enabled = isset($_POST['custom_popup_enabled']) ? 1 : 0;
+        $message = sanitize_text_field($_POST['custom_popup_message']);
+        $button_text = sanitize_text_field($_POST['custom_popup_button_text']);
+
+        // Validate and sanitize data
+        if ($enabled) {
+            // Save settings to the database
+            update_option('custom_popup_enabled', $enabled);
+            update_option('custom_popup_message', $message);
+            update_option('custom_popup_button_text', $button_text);
+        } else {
+            // Delete settings from the database
+            delete_option('custom_popup_enabled');
+            delete_option('custom_popup_message');
+            delete_option('custom_popup_button_text');
+        }
+
+        // Display a success message
+        echo '<div class="notice notice-success"><p>Settings saved successfully.</p></div>';
     }
 
-    // Retrieve current settings
+    // Get current settings values
     $enabled = get_option('custom_popup_enabled');
     $message = get_option('custom_popup_message');
     $button_text = get_option('custom_popup_button_text');
-    
-    // Display the settings page markup
+
+    // Render the settings page HTML
     ?>
     <div class="wrap">
-        <h1><?php echo esc_html(get_admin_page_title()); ?></h1>
-        
+        <h1>Custom Pop-up Settings</h1>
         <form method="post" action="">
             <table class="form-table">
                 <tr>
                     <th scope="row">Enable Pop-up</th>
                     <td>
-                        <label>
-                            <input type="checkbox" name="custom_popup_enabled" value="1" <?php checked($enabled, true); ?>>
-                            Enable the custom pop-up
+                        <label for="custom_popup_enabled">
+                            <input type="checkbox" name="custom_popup_enabled" id="custom_popup_enabled" value="1" <?php checked($enabled, 1); ?>>
+                            Enable custom pop-up
                         </label>
                     </td>
                 </tr>
                 <tr>
                     <th scope="row">Pop-up Message</th>
                     <td>
-                        <input type="text" name="custom_popup_message" value="<?php echo esc_attr($message); ?>" class="regular-text">
+                        <textarea name="custom_popup_message" id="custom_popup_message" rows="3"><?php echo esc_textarea($message); ?></textarea>
                     </td>
                 </tr>
                 <tr>
                     <th scope="row">Button Text</th>
                     <td>
-                        <input type="text" name="custom_popup_button_text" value="<?php echo esc_attr($button_text); ?>" class="regular-text">
+                        <input type="text" name="custom_popup_button_text" id="custom_popup_button_text" value="<?php echo esc_attr($button_text); ?>">
                     </td>
                 </tr>
             </table>
-            
             <p class="submit">
-                <input type="submit" name="custom_popup_settings_save" class="button-primary" value="Save Changes">
+                <input type="submit" name="custom_popup_settings_save" class="button-primary" value="Save Settings">
             </p>
         </form>
     </div>
     <?php
 }
-
-    // Retrieve current settings
-    $enabled = get_option('custom_popup_enabled');
-
-
