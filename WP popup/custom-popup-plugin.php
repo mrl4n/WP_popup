@@ -1,13 +1,14 @@
 <?php
 /**
- * Plugin Name: Custom Pop-up Plugin
- * Plugin URI: https://github.com/mrl4n
- * Description: This plugin adds a custom pop-up to your WordPress site.
- * Version: 1.0
- * Author: mrl4n
- * Author URI: https://github.com/mrl4n
- * License: GPLv2 or later
- * Text Domain: custom-popup-plugin
+Plugin Name: Custom Popup Plugin
+Plugin URI: https://github.com/mrl4n/WP_popup
+Description: A customizable popup plugin for WordPress
+Update URI: https://github.com/mrl4n/WP_popup
+Author: mrl4n
+Author URI: https://github.com/mrl4n/WP_popup
+Text Domain: wp-custom-popup
+Domain Path: /languages
+License: GPLv2 or later
  */
 
 // Enqueue necessary scripts and styles
