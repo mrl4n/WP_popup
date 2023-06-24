@@ -183,7 +183,6 @@ function custom_popup_enabled_field_callback() {
     $enabled = get_option('custom_popup_enabled', '1');
     echo '<input type="checkbox" name="custom_popup_enabled" value="1" ' . checked($enabled, '1', false) . '>';
 }
-
 function custom_popup_selected_pages_field_callback() {
     $selected_pages = get_option('custom_popup_selected_pages', array());
     $pages = get_pages();
@@ -234,13 +233,25 @@ function custom_popup_submit_handler() {
     $input = isset($_POST['custom_popup_input']) ? sanitize_text_field($_POST['custom_popup_input']) : '';
 
     // Prepare the email
-    $to = get_option('admin_email');
-    $subject = 'Custom Popup Form Submission';
-    $message = 'The form was submitted with the following input: ' . $input;
-    $headers = array('Content-Type: text/html; charset=UTF-8');
+$to = get_option('admin_email');
+$subject = 'Custom Popup Form Submission';
+$message = 'The form was submitted with the following input: ' . $input;
 
-    // Send the email
-    $sent = wp_mail($to, $subject, $message, $headers);
+// Get the selected pages
+$selected_pages = get_option('custom_popup_selected_pages', array());
+if (!empty($selected_pages)) {
+    $message .= '<br>Selected Pages: <ul>';
+    foreach ($selected_pages as $page_id) {
+        $page_title = get_the_title($page_id);
+        $message .= '<li>' . esc_html($page_title) . '</li>';
+    }
+    $message .= '</ul>';
+}
+
+$headers = array('Content-Type: text/html; charset=UTF-8');
+
+// Send the email
+$sent = wp_mail($to, $subject, $message, $headers);
 
     // Return a response
     if ($sent) {
