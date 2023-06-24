@@ -187,11 +187,14 @@ function custom_popup_selected_pages_field_callback() {
     $selected_pages = get_option('custom_popup_selected_pages', array());
     $pages = get_pages();
 
-    echo '<select name="custom_popup_selected_pages[]" multiple>';
+    echo '<ul>';
     foreach ($pages as $page) {
-        echo '<option value="' . esc_attr($page->ID) . '" ' . selected(in_array($page->ID, $selected_pages), true, false) . '>' . esc_html($page->post_title) . '</option>';
+        echo '<li><label>';
+        echo '<input type="checkbox" name="custom_popup_selected_pages[]" value="' . esc_attr($page->ID) . '" ' . checked(in_array($page->ID, $selected_pages), true, false) . '>';
+        echo esc_html($page->post_title);
+        echo '</label></li>';
     }
-    echo '</select>';
+    echo '</ul>';
 }
 
 function custom_popup_message_field_callback() {
@@ -276,3 +279,4 @@ function should_display_custom_popup() {
 
     return false;
 }
+
