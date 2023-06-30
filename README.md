@@ -1,5 +1,5 @@
 # WP_popup
-WP plugin for popup, to collect data for newsletter and mailing list fully customizable.
+WP plugin for popup, to collect data for newsletter, mailing list and much more, fully customizable.
 
 * Email opt-in popups
 * Content upgrade popups
